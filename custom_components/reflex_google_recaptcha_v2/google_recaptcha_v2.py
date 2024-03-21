@@ -28,7 +28,6 @@ def set_secret_key(secret_key: str):
 
 
 class GoogleRecaptchaV2State(rx.State):
-    recaptcha_verify_response_json: str = rx.LocalStorage(sync=True)
     _is_valid: bool = False
 
     def verify_captcha(self, token: str):
