@@ -7,8 +7,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "reflex-google-recaptcha-v2"
-version = "0.0.2"
-description = "Reflex custom component google-recaptcha-v2"
+version = "0.0.3"
+description = "Google ReCAPTCHA v2 Integration"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.8"
@@ -18,7 +18,8 @@ keywords = [
     "reflex-custom-components"]
 
 dependencies = [
-    "reflex>=0.4.2"
+    "httpx>=0.25.1",
+    "reflex>=0.4.6",
 ]
 
 classifiers = [

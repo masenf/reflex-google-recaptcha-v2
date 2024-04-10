@@ -1,9 +1,8 @@
-"""Reflex custom component GoogleRecaptchaV2."""
+"""Google ReCAPTCHA v2 Integration"""
 
 from __future__ import annotations
 
 import os
-from typing import Any, Dict
 
 import httpx
 
@@ -56,10 +55,6 @@ class GoogleRecaptchaV2(rx.NoSSRComponent):
     """GoogleRecaptchaV2 component.
 
     Event Triggers:
-        - async_script_on_load: optional callback when the google recaptcha script has been loaded
-        - on_change: The function to be called when the user successfully completes the captcha
-        - on_errored: optional callback when the challenge errored, most likely due to network issues.
-        - on_expired: optional callback when the challenge is expired and has to be redone by user. By default it will call the onChange with null to signify expired callback.
     """
 
     # The React library to wrap.
@@ -97,6 +92,18 @@ class GoogleRecaptchaV2(rx.NoSSRComponent):
     # The theme of the widget - light or dark (defaults: light).
     theme: rx.Var[str]
 
+    # The function to be called when the user successfully completes the captcha
+    on_change: rx.EventHandler[lambda e0: [e0]]
+
+    # Optional callback when the google recaptcha script has been loaded
+    async_script_on_load: rx.EventHandler[lambda e0: [e0]]
+
+    # Optional callback when the challenge errored, most likely due to network issues.
+    on_errored: rx.EventHandler[lambda e0: [e0]]
+
+    # Optional callback when the challenge is expired and has to be redone by user. By default it will call the onChange with null to signify expired callback.
+    on_expired: rx.EventHandler[lambda e0: [e0]]
+
     @classmethod
     def create(cls, **props) -> "GoogleRecaptchaV2":
         if props.get("size") == "invisible":
@@ -105,15 +112,6 @@ class GoogleRecaptchaV2(rx.NoSSRComponent):
         props.setdefault("sitekey", SITE_KEY)
         props.setdefault("on_change", GoogleRecaptchaV2State.verify_captcha)
         return super().create(**props)
-
-    def get_event_triggers(self) -> Dict[str, Any]:
-        return {
-            **super().get_event_triggers(),
-            "async_script_on_load": lambda e0: [e0],
-            "on_change": lambda e0: [e0],
-            "on_errored": lambda e0: [e0],
-            "on_expired": lambda e0: [e0],
-        }
 
     def api(self) -> "GoogleRecaptchaV2API" | None:
         raise NotImplementedError("Invisible mode is not currently working.")
