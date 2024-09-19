@@ -45,7 +45,7 @@ class GoogleRecaptchaV2State(rx.State):
         except ValueError:
             pass
 
-    @rx.cached_var
+    @rx.var(cache=True)
     def token_is_valid(self) -> bool:
         """Check if the token is valid."""
         return self._is_valid
