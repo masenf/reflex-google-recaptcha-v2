@@ -26,11 +26,18 @@ def set_secret_key(secret_key: str):
     SECRET_KEY = secret_key
 
 
+def is_key_set() -> bool:
+    """Check if the site key is set."""
+    return bool(SITE_KEY) and bool(SECRET_KEY)
+
+
 class GoogleRecaptchaV2State(rx.State):
     _is_valid: bool = False
 
     def verify_captcha(self, token: str):
         """Validate the captcha token."""
+        if not is_key_set():
+            raise RuntimeError("Cannot validate tokens without setting site and secret keys.")
         payload = {
             "secret": SECRET_KEY,
             "response": token,

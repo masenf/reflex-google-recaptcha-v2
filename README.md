@@ -19,6 +19,10 @@ export RECAPTCHA_SECRET_KEY="your-secret-key"
 
 Alternatively, you can set the keys via python functions as seen in the demo app.
 
+These keys can be obtained at Google's [Recaptcha Portal](https://console.cloud.google.com/security/recaptcha).
+To access the secret key, which is required, go to the Integration tab and
+select "Use legacy key" or "I'm integrating with a third party library".
+
 ### Place the Recaptcha component
 
 ```python
