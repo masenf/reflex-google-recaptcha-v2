@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
+import contextlib
+import dataclasses
 import os
 
 import httpx
-
 import reflex as rx
-
 
 VERIFY_ENDPOINT = "https://www.google.com/recaptcha/api/siteverify"
 SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
@@ -37,7 +37,9 @@ class GoogleRecaptchaV2State(rx.State):
     def verify_captcha(self, token: str):
         """Validate the captcha token."""
         if not is_key_set():
-            raise RuntimeError("Cannot validate tokens without setting site and secret keys.")
+            raise RuntimeError(
+                "Cannot validate tokens without setting site and secret keys."
+            )
         payload = {
             "secret": SECRET_KEY,
             "response": token,
@@ -47,10 +49,8 @@ class GoogleRecaptchaV2State(rx.State):
         }
         resp = httpx.post(VERIFY_ENDPOINT, data=payload)
         resp.raise_for_status()
-        try:
+        with contextlib.suppress(ValueError):
             self._is_valid = resp.json().get("success", False)
-        except ValueError:
-            pass
 
     @rx.var(cache=True)
     def token_is_valid(self) -> bool:
@@ -112,7 +112,7 @@ class GoogleRecaptchaV2(rx.NoSSRComponent):
     on_expired: rx.EventHandler[lambda e0: [e0]]
 
     @classmethod
-    def create(cls, **props) -> "GoogleRecaptchaV2":
+    def create(cls, **props) -> GoogleRecaptchaV2:
         if props.get("size") == "invisible":
             props.setdefault("id", rx.vars.get_unique_variable_name())
             raise NotImplementedError("Invisible mode is not currently working.")
@@ -120,7 +120,7 @@ class GoogleRecaptchaV2(rx.NoSSRComponent):
         props.setdefault("on_change", GoogleRecaptchaV2State.verify_captcha)
         return super().create(**props)
 
-    def api(self) -> "GoogleRecaptchaV2API" | None:
+    def api(self) -> GoogleRecaptchaV2API:
         raise NotImplementedError("Invisible mode is not currently working.")
         ref = self.get_ref()
         if ref:
@@ -131,7 +131,11 @@ class GoogleRecaptchaV2(rx.NoSSRComponent):
 google_recaptcha_v2 = GoogleRecaptchaV2.create
 
 
-class GoogleRecaptchaV2API(rx.Base):
+@dataclasses.dataclass(
+    frozen=True,
+    slots=True,
+)
+class GoogleRecaptchaV2API:
     """The API for triggering execute() in invisible mode.
 
     Ref API:
@@ -147,11 +151,8 @@ class GoogleRecaptchaV2API(rx.Base):
     ref_name: str
 
     def _get_api_spec(self, fn_name) -> rx.Var[rx.EventChain]:
-        return rx.Var.create(
-            f"{rx.Var.create(self.ref_name).as_ref()}?.current?.{fn_name}",
-            _var_is_local=False,
-            _var_is_string=False,
-        )._replace(
+        return rx.Var(
+            f"{rx.Var(self.ref_name)._as_ref()}?.current?.{fn_name}",
             _var_type=rx.EventChain,
         )
 
