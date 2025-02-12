@@ -34,7 +34,8 @@ def is_key_set() -> bool:
 class GoogleRecaptchaV2State(rx.State):
     _is_valid: bool = False
 
-    def verify_captcha(self, token: str):
+    @rx.event
+    async def verify_captcha(self, token: str):
         """Validate the captcha token."""
         if not is_key_set():
             raise RuntimeError(
@@ -47,8 +48,9 @@ class GoogleRecaptchaV2State(rx.State):
                 self.router.headers, "x_forwarded_for", self.router.session.client_ip
             ),
         }
-        resp = httpx.post(VERIFY_ENDPOINT, data=payload)
-        resp.raise_for_status()
+        async with httpx.AsyncClient() as aclient:
+            resp = await aclient.post(VERIFY_ENDPOINT, data=payload)
+            resp.raise_for_status()
         with contextlib.suppress(ValueError):
             self._is_valid = resp.json().get("success", False)
 
