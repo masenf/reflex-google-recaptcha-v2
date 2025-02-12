@@ -1,11 +1,13 @@
 import reflex as rx
-
 import reflex_google_recaptcha_v2
-from reflex_google_recaptcha_v2 import google_recaptcha_v2, GoogleRecaptchaV2State
+from reflex_google_recaptcha_v2 import GoogleRecaptchaV2State, google_recaptcha_v2
 
-
-reflex_google_recaptcha_v2.set_site_key("6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI")
-reflex_google_recaptcha_v2.set_secret_key("6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe")
+if not reflex_google_recaptcha_v2.is_key_set():
+    # Default test keys (will display warning in browser if used).
+    reflex_google_recaptcha_v2.set_site_key("6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI")
+    reflex_google_recaptcha_v2.set_secret_key(
+        "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+    )
 
 
 class State(rx.State):
