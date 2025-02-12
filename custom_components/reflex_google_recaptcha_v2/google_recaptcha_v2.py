@@ -5,6 +5,7 @@ from __future__ import annotations
 import contextlib
 import dataclasses
 import os
+from typing import cast
 
 import httpx
 import reflex as rx
@@ -120,7 +121,7 @@ class GoogleRecaptchaV2(rx.NoSSRComponent):
             raise NotImplementedError("Invisible mode is not currently working.")
         props.setdefault("sitekey", SITE_KEY)
         props.setdefault("on_change", GoogleRecaptchaV2State.verify_captcha)
-        return super().create(**props)
+        return cast(GoogleRecaptchaV2, super().create(**props))
 
     def api(self) -> GoogleRecaptchaV2API:
         raise NotImplementedError("Invisible mode is not currently working.")
