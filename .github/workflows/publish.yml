@@ -7,7 +7,7 @@ on:
 env:
   EXTRA_ARGS: "--hostname ${{ vars.HOSTNAME }} --env RECAPTCHA_SITE_KEY=${{ secrets.RECAPTCHA_SITE_KEY }} --env RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}"
   RECAPTCHA_SITE_KEY: ${{ secrets.RECAPTCHA_SITE_KEY }}
-  RECAPTCHA_SECRET_KEY: ${{ secrest.RECAPTCHA_SECRET_KEY }}
+  RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
 
 jobs:
   publish:
