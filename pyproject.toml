@@ -14,7 +14,7 @@ keywords = [
     "reflex-custom-components"]
 
 dependencies = [
-    "httpx>=0.25.1",
+    "httpx2>=2.12.0",
     "reflex>=0.6.8",
 ]
 
