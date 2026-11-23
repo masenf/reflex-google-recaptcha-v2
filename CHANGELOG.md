@@ -10,6 +10,13 @@ written; alpha releases are omitted.
 
 <!-- towncrier release notes start -->
 
+## v0.1.1 (2026-11-23)
+
+### Bug Fixes
+
+- Verify captcha tokens with `httpx2` and depend on `httpx2>=2.12.0` instead of `httpx`, since Reflex is replacing `httpx` with `httpx2`. ([#5](https://github.com/masenf/reflex-google-recaptcha-v2/issues/5))
+
+
 ## v0.1.0.post1 (2025-09-05)
 
 ### Miscellaneous
