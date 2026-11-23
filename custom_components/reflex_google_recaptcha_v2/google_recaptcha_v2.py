@@ -7,7 +7,7 @@ import dataclasses
 import os
 from typing import cast
 
-import httpx
+import httpx2
 import reflex as rx
 
 VERIFY_ENDPOINT = "https://www.google.com/recaptcha/api/siteverify"
@@ -49,7 +49,7 @@ class GoogleRecaptchaV2State(rx.State):
                 self.router.headers, "x_forwarded_for", self.router.session.client_ip
             ),
         }
-        async with httpx.AsyncClient() as aclient:
+        async with httpx2.AsyncClient() as aclient:
             resp = await aclient.post(VERIFY_ENDPOINT, data=payload)
             resp.raise_for_status()
         with contextlib.suppress(ValueError):
